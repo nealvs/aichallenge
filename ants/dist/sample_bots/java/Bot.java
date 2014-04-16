@@ -1,3 +1,5 @@
+
 public interface Bot {
-	void do_turn(Ants ants);
+
+    void do_turn(Ants ants);
 }
