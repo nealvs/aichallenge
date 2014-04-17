@@ -15,6 +15,7 @@ public class Ants {
     private int spawnradius2 = 0;
     private Ilk map[][];
     private Map<Tile, Ilk> antList = new HashMap<Tile, Ilk>();
+    private Map<Tile, Ilk> hillList = new HashMap<Tile, Ilk>(); 
     private Set<Tile> foodList = new HashSet<Tile>();
     private Set<Tile> deadList = new HashSet<Tile>();
 
@@ -87,19 +88,30 @@ public class Ants {
     }
 
     private boolean update(List<String> data) {
-        // clear ants and food
+        // clear Ants
         for (Tile ant : this.antList.keySet()) {
             this.map[ant.row()][ant.col()] = Ilk.LAND;
         }
         this.antList.clear();
+        
+        // Hills
+        for (Tile hill : this.hillList.keySet()) {
+            this.map[hill.row()][hill.col()] = Ilk.LAND;
+        }
+        this.hillList.clear();
+        
+        // Food
         for (Tile food : this.foodList) {
             this.map[food.row()][food.col()] = Ilk.LAND;
         }
         this.foodList.clear();
+        
+        // Dead
         for (Tile dead : this.deadList) {
             this.map[dead.row()][dead.col()] = Ilk.LAND;
         }
         this.deadList.clear();
+        
         // get new tile ilks
         for (String line : data) {
             String tokens[] = line.split(" ");
@@ -118,6 +130,10 @@ public class Ants {
                 } else if (tokens[0].equals("d")) {
                     this.map[row][col] = Ilk.DEAD;
                     this.deadList.add(new Tile(row, col));
+                } else if (tokens[0].equals("h")) {
+                    Ilk ilk = Ilk.fromId(Integer.parseInt(tokens[3]));
+                    this.map[row][col] = ilk;
+                    this.hillList.put(new Tile(row, col), ilk);
                 }
             }
         }
@@ -158,6 +174,16 @@ public class Ants {
             }
         }
         return enemyAnts;
+    }
+    
+    public Set<Tile> enemyHills() {
+        Set<Tile> enemyHills = new HashSet<Tile>();
+        for (Entry<Tile, Ilk> hill : this.hillList.entrySet()) {
+            if (hill.getValue().isEnemy()) {
+                enemyHills.add(hill.getKey());
+            }
+        }
+        return enemyHills;
     }
 
     public Set<Tile> food() {

@@ -68,7 +68,8 @@ public enum Ilk {
     }
 
     public boolean isUnoccupied() {
-        return this.id == LAND.id || this.id == DEAD.id;
+        return this.id == LAND.id || this.id == DEAD.id ||
+                idLookup.get(id).isEnemy();
     }
 
     public boolean isEnemyOf(Ilk ant) {
