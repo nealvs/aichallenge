@@ -14,6 +14,8 @@ public class Ants {
     private int attackradius2 = 0;
     private int spawnradius2 = 0;
     private Ilk map[][];
+    
+    private Map<Tile, Ilk> unseenList = new HashMap<Tile, Ilk>();
     private Map<Tile, Ilk> antList = new HashMap<Tile, Ilk>();
     private Map<Tile, Ilk> hillList = new HashMap<Tile, Ilk>(); 
     private Set<Tile> foodList = new HashSet<Tile>();
@@ -94,12 +96,6 @@ public class Ants {
         }
         this.antList.clear();
         
-        // Hills
-        for (Tile hill : this.hillList.keySet()) {
-            this.map[hill.row()][hill.col()] = Ilk.LAND;
-        }
-        this.hillList.clear();
-        
         // Food
         for (Tile food : this.foodList) {
             this.map[food.row()][food.col()] = Ilk.LAND;
@@ -137,6 +133,16 @@ public class Ants {
                 }
             }
         }
+        
+        unseenList.clear();
+        for(int row=0; row<map.length; row++) {
+            for(int col=0; col<map[row].length; col++) {
+                if(map[row][col].isUnseen()) {
+                    unseenList.put(new Tile(row, col), map[row][col]);
+                }
+            }
+        }
+        
         return true;
     }
 
@@ -184,6 +190,14 @@ public class Ants {
             }
         }
         return enemyHills;
+    }
+    
+    public Set<Tile> unseen() {
+        Set<Tile> unseen = new HashSet<Tile>();
+        for (Entry<Tile, Ilk> type : this.unseenList.entrySet()) {
+            unseen.add(type.getKey());
+        }
+        return unseen;
     }
 
     public Set<Tile> food() {

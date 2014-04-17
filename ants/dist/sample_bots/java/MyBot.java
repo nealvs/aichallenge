@@ -21,6 +21,7 @@ public class MyBot implements Bot {
         targets.addAll(ants.food());
         targets.addAll(ants.enemyAnts());
         targets.addAll(ants.enemyHills());
+        targets.addAll(ants.unseen());
         
         for (Tile antLocation : ants.myAnts()) {
             boolean issued = false;

@@ -62,6 +62,10 @@ public enum Ilk {
     public boolean isEnemy() {
         return this.id > MY_ANT.id;
     }
+    
+     public boolean isUnseen() {
+        return this.id == UNSEEN.id;
+    }
 
     public boolean isPassable() {
         return this.id > WATER.id;
