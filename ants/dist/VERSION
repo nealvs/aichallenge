@@ -1,0 +1,9 @@
+This tools package was published on Mon Apr  7 17:57:54 MDT 2014.
+
+Last change in the ants/ folder was:
+commit 525883d62d7979ca3bd56bc38c91bb2e011dedaf
+Date:   Thu Dec 22 14:09:40 2011 -0500
+
+    Fix map legality check using max instead of min
+
+Check https://github.com/aichallenge/aichallenge/ants/ for new versions.
