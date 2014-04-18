@@ -31,6 +31,8 @@ public class MyBot implements Bot {
             maxPerTarget = 1;
         }
         
+        System.out.println("Max Per Target: " + maxPerTarget);
+        
         Map<Tile, List<Tile>> targettingAnts = new HashMap<Tile, List<Tile>>();
         
         for (Tile antLocation : ants.myAnts()) {
