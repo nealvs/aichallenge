@@ -18,16 +18,32 @@ public class MyBot implements Bot {
         
         Set<Tile> destinations = new HashSet<Tile>();
         Set<Tile> targets = new HashSet<Tile>();
+        
         targets.addAll(ants.food());
-        targets.addAll(ants.enemyAnts());
         targets.addAll(ants.enemyHills());
         targets.addAll(ants.unseen());
+        
+        int maxPerTarget = ants.myAnts().size();
+        if(targets.size() > 0) {
+            maxPerTarget = ants.myAnts().size() / targets.size();
+        }
+        if(maxPerTarget <= 0) {
+            maxPerTarget = 1;
+        }
+        
+        Map<Tile, List<Tile>> targettingAnts = new HashMap<Tile, List<Tile>>();
         
         for (Tile antLocation : ants.myAnts()) {
             boolean issued = false;
             Tile closestTarget = null;
             int closestDistance = 999999;
             for (Tile target : targets) {
+                // Limit how many ants can go to this target
+                if(targettingAnts.containsKey(target) && targettingAnts.get(target).size() > maxPerTarget) {
+                    continue;
+                }
+                
+                // Check the distance
                 int distance = ants.distance(antLocation, target);
                 if (distance < closestDistance) {
                     closestDistance = distance;
@@ -45,6 +61,13 @@ public class MyBot implements Bot {
                         ants.issueOrder(antLocation, direction);
                         destinations.add(destination);
                         issued = true;
+                        if(targettingAnts.containsKey(closestTarget)) {
+                            targettingAnts.get(closestTarget).add(antLocation);
+                        } else {
+                            List<Tile> antList = new ArrayList<Tile>();
+                            antList.add(antLocation);
+                            targettingAnts.put(closestTarget, antList);
+                        }
                         break;
                     }
                 }

@@ -18,6 +18,7 @@ public class Ants {
     private Map<Tile, Ilk> unseenList = new HashMap<Tile, Ilk>();
     private Map<Tile, Ilk> antList = new HashMap<Tile, Ilk>();
     private Map<Tile, Ilk> hillList = new HashMap<Tile, Ilk>(); 
+    private Map<Tile, Ilk> razedList = new HashMap<Tile, Ilk>(); 
     private Set<Tile> foodList = new HashSet<Tile>();
     private Set<Tile> deadList = new HashSet<Tile>();
 
@@ -134,6 +135,18 @@ public class Ants {
             }
         }
         
+        // Gather razed hill information
+        for(Tile location : antList.keySet()) {
+            for(Tile hillLocation : hillList.keySet()) {
+                if(antList.get(location).id != hillList.get(hillLocation).id) {
+                    if(!razedList.containsKey(hillLocation)) {
+                        razedList.put(hillLocation, hillList.get(hillLocation));
+                    }
+                }
+            }
+        }
+        
+        // Make a list of unseen tiles
         unseenList.clear();
         for(int row=0; row<map.length; row++) {
             for(int col=0; col<map[row].length; col++) {
@@ -185,7 +198,7 @@ public class Ants {
     public Set<Tile> enemyHills() {
         Set<Tile> enemyHills = new HashSet<Tile>();
         for (Entry<Tile, Ilk> hill : this.hillList.entrySet()) {
-            if (hill.getValue().isEnemy()) {
+            if (hill.getValue().isEnemy() && !razedList.containsKey(hill.getKey())) {
                 enemyHills.add(hill.getKey());
             }
         }
